@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Auto Maintenance Tracker</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body onload="initialize()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="col-md-2">
+					<input 
+						type="text" 
+						data-bind="value: newCarMake" 
+						class='form-control' 
+						id='make' 
+						placeholder="Make">
+				</div>
+				<div class="col-md-2">
+					<input type="text" data-bind="value: newCarModel" class='form-control' id='model' placeholder="Model">
+				</div>
+				<div class="col-md-2">
+					<input type="number" data-bind="value: newCarYear" class='form-control' id='year' placeholder="Year">
+				</div>
+				<div class="col-md-2">
+					<input type="number" data-bind="value: newCarOdometer" class='form-control' id='odometer' placeholder="Odometer">
+				</div>
+				<div class="col-md-2">
+					<select name="" id="engineType" class='form-control' data-bind='options: engineTypes, value: selectedEngineType'></select>
+				</div>
+				<div class="col-md-2">
+					<select 
+						name="" 
+						id="maintTask" 
+						class="form-control" 
+						data-bind="options: maintTasks, optionsText: 'description', optionsValue: 'name', value: selectedMaintTask">
+					</select>
+					<button type='button' class='btn btn-default' data-bind="click:addTask">Add Task</button>
+					
+					<ul class='list-unstyled' data-bind="foreach: newCarTasks">
+						<li>
+							<span data-bind="text: $data" id="newCarTaskName"> </span>
+							<a class="pull-right" href="#" data-bind="click: removeNewTask">X</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<button type='button' data-bind="click:addNewCar" class='btn btn-default pull-right'>Save</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Make</th>
+							<th>Model</th>
+							<th>Year</th>
+							<th>Odometer</th>
+							<th>Engine Type</th>
+							<th>Maintenance Tasks</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach: cars">
+						<tr>
+							<td data-bind="text: make"></td>
+							<td data-bind="text: model"></td>
+							<td data-bind="text: year"></td>
+							<td data-bind="text: odometer"></td>
+							<td data-bind="text: engineType"></td>
+							<td>
+								<ul class='list-unstyled' data-bind="foreach: maintTasks">
+									<li>
+										<span data-bind="text: $data"> </span>
+									</li>
+								</ul>
+							</td>
+							<td>
+								<button class='btn btn-danger' data-bind='click: removeCar'>Delete</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="javascripts/index.js"></script>
+</body>
+</html>
