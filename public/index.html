@@ -6,10 +6,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="stylesheets/style.css"> -->
 </head>
 <body onload="initialize()">
 	<div class="container">
-		<div class="row">
+		<div class="row" data-bind="visible: adding">
 			<div class="col-md-12">
 				<div class="col-md-2">
 					<input 
@@ -48,10 +49,70 @@
 					</ul>
 				</div>
 			</div>
-		</div>
-		<div class="row">
 			<div class="col-md-12">
-				<button type='button' data-bind="click:addNewCar" class='btn btn-default pull-right'>Save</button>
+				<button class="btn btn-default pull-right" data-bind="click: addingCar">Cancel</button>
+				<button type='button' data-bind="click:addNewCar" class='btn btn-success pull-right'>Save</button>
+			</div>
+		</div>
+		<div class="row" data-bind="visible: !adding() && !editing()">
+			<div class="col-md-12">
+				<button class="btn btn-default pull-right" data-bind="click: addingCar">Add new car</button>
+			</div>
+		</div>
+
+
+
+		<!-- section for editing a car -->
+		<div class='row' data-bind="visible: editing">
+
+			<div class="col-md-12">
+				<div class="col-md-2">
+					<input 
+						type="text" 
+						data-bind="value: editCarMake" 
+						class='form-control' 
+						id='make' 
+						placeholder="Make">
+				</div>
+				<div class="col-md-2">
+					<input type="text" data-bind="value: editCarModel" class='form-control' id='model' placeholder="Model">
+				</div>
+				<div class="col-md-2">
+					<input type="number" data-bind="value: editCarYear" class='form-control' id='year' placeholder="Year">
+				</div>
+				<div class="col-md-2">
+					<input type="number" data-bind="value: editCarOdometer" class='form-control' id='odometer' placeholder="Odometer">
+				</div>
+				<div class="col-md-2">
+					<select 
+						name="" 
+						id="editSelectedEngineType"
+						class='form-control' 
+						data-bind='
+							options: engineTypes, 
+							value: engineTypes()[engineTypes().indexOf(editCarEngineType())]'>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<select 
+						name="" 
+						id="maintTask" 
+						class="form-control" 
+						data-bind="options: maintTasks, optionsText: 'description', optionsValue: 'name', value: editSelectedMaintTask">
+					</select>
+					<button type='button' class='btn btn-default' data-bind="click:editAddMaintTask">Add Task</button>
+					<ul class='list-unstyled' data-bind="foreach: editAddedMaintTasks">
+						<li>
+							<span data-bind="text: $data" id=""> </span>
+							<a class="pull-right" href="#" data-bind="click: editRemoveNewMaintTask">X</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+			<div class="col-md-12">
+				<button class="btn btn-default pull-right" data-bind="click: cancelEdit">Cancel</button>
+				<button class="btn btn-success pull-right" data-bind="click: updateCar">Update car</button>
 			</div>
 		</div>
 		<div class="row">
@@ -83,6 +144,7 @@
 								</ul>
 							</td>
 							<td>
+								<button class='btn btn-default' data-bind='click: editingCar'>Update</button>
 								<button class='btn btn-danger' data-bind='click: removeCar'>Delete</button>
 							</td>
 						</tr>

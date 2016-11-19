@@ -160,10 +160,14 @@ exports.deleteCar = function(req, res) {
 }
 
 exports.updateCar = function(req, res) {
-	var status = validateCar(req.body.car);
-	res.send('Updating a car');
-}
-
-exports.getEngineTypes = function(req, res) {
-	
+	var status = validateCar(req.body.updatedCar);
+	if (status.length === 0) {
+		Cars.findOneAndUpdate({ '_id': req.body.updatedCar._id }, req.body.updatedCar, function(err, doc) {
+			Cars.find({}, function(err, cars) {
+				res.status(201).send(JSON.stringify({ 'message': 'car updated', 'cars': cars }));
+			});
+		});
+	} else {
+		res.send(JSON.stringify({ 'message': 'Car not updated', 'errors': status }));
+	}
 }

@@ -39,6 +39,7 @@ function getCars() {
 				$('#year').val('');
 				$('#odometer').val('');
 				viewModel.newCarTasks([]);
+				adding(false);
 			}
 		},
 		failure: function(err) {}
@@ -57,8 +58,92 @@ function getCars() {
  	});
  }
 
+function addingCar() {
+
+	if (adding() == false) {
+		adding(true);
+	} else {
+		adding(false);
+	}
+	
+}
+
+ function editingCar() {
+
+ 	if (editing() == false) {
+ 		editing(true);
+ 		adding(false);
+
+ 		var car = this;
+ 		viewModel.editCarID(car._id);
+	 	viewModel.editCarMake(car.make);
+	 	viewModel.editCarModel(car.model);
+	 	viewModel.editCarYear(car.year);
+	 	viewModel.editCarOdometer(car.odometer);
+	 	viewModel.editCarEngineType(car.engineType);
+		viewModel.editCarMaintTasks(car.maintTasks);
+
+	 	// make a copy of the car's maintTasks instead of working directly with it
+	 	var maintTasksCopy = car.maintTasks.slice();
+
+	 	viewModel.editAddedMaintTasks(maintTasksCopy);
+ 	} 
+ }
+
+ function cancelEdit() {
+ 	editing(false);
+ 	adding(false);
+
+ 	viewModel.editAddedMaintTasks([]);
+ }
+
+ function editAddMaintTask() {
+ 	viewModel.editAddedMaintTasks.push(viewModel.editSelectedMaintTask());
+ }
+
+ function editRemoveNewMaintTask() {
+ 	var index = viewModel.editAddedMaintTasks.indexOf(String(this));
+	viewModel.editAddedMaintTasks.splice(index, 1);
+ }
+
+
  function updateCar() {
- 	var car = this;
+
+ 	var updatedCar = {
+ 		'_id': viewModel.editCarID(),
+		'make': viewModel.editCarMake(),
+		'model': viewModel.editCarModel(),
+		'year': viewModel.editCarYear(),
+		'odometer': viewModel.editCarOdometer(),
+		'engineType': $('#editSelectedEngineType').val(),
+		'maintTasks': viewModel.editAddedMaintTasks()
+	};
+
+	$.ajax({
+		type: "PUT",
+		url: "http://localhost:3000/cars/" + updatedCar._id,
+		data: JSON.stringify({ updatedCar: updatedCar }),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(data) {
+			
+
+		 	if (data.hasOwnProperty('errors')) {
+				alert(data.errors);
+			} else {
+				viewModel.cars(data.cars);
+
+
+				editing(false);
+			 	adding(false);
+			 	viewModel.editAddedMaintTasks([]);
+
+			}
+		}
+	});
+	
+
+ 	
  }
 
 function getEngineTypes() {
@@ -82,6 +167,9 @@ function removeNewTask() {
 	viewModel.newCarTasks.splice(index, 1);
 }
 
+var editing = ko.observable(false);
+var adding = ko.observable(false);
+
 function ViewModel() {
  	var self = this;
  	self.cars = ko.observableArray();
@@ -92,7 +180,7 @@ function ViewModel() {
  	self.selectedMaintTask = ko.observable();
  	self.selectedEngineType = ko.observable();
 
- 	self.values = ko.observableArray(['one', 'two']);
+ 	self.editingCar = ko.observable();
 
 
  	self.newCarMake = ko.observable();
@@ -101,6 +189,20 @@ function ViewModel() {
  	self.newCarOdometer = ko.observable();
  	self.newCarEngineType = ko.observable();
  	self.newCarMaintTasks = ko.observableArray();
+
+
+ 	self.editCarMake = ko.observable();
+ 	self.editCarModel = ko.observable();
+ 	self.editCarYear = ko.observable();
+ 	self.editCarOdometer = ko.observable();
+ 	self.editCarEngineType = ko.observable();
+ 	self.editCarMaintTasks = ko.observableArray();
+ 	self.editCarID = ko.observable();
+
+
+ 	self.editSelectedMaintTask = ko.observable();
+
+ 	self.editAddedMaintTasks = ko.observableArray();
 
 }
 

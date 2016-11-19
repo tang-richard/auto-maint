@@ -8,8 +8,6 @@ router.get('/', carsController.getCars);
 router.get('/:id', carsController.getCar);
 router.post('/', carsController.postCars);
 router.delete('/:id', carsController.deleteCar);
-router.put('/:id', function(req, res) {
-	carsController.updateCar;
-});
+router.put('/:id', carsController.updateCar);
 
 module.exports = router;
