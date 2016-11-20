@@ -28,21 +28,18 @@ function getCars() {
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
 		success: function(data) {
+			viewModel.cars(data.cars);
 
-			if (data.hasOwnProperty('errors')) {
-				alert(data.errors);
-			} else {
-				viewModel.cars(data.cars);
-
-				$('#make').val('');
-				$('#model').val('');
-				$('#year').val('');
-				$('#odometer').val('');
-				viewModel.newCarTasks([]);
-				adding(false);
-			}
+			$('#make').val('');
+			$('#model').val('');
+			$('#year').val('');
+			$('#odometer').val('');
+			viewModel.newCarTasks([]);
+			adding(false);
 		},
-		failure: function(err) {}
+		error: function(data) {
+			alert(data.responseJSON.errors);
+		}
 	});
  }
 
@@ -126,24 +123,16 @@ function addingCar() {
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
 		success: function(data) {
-			
+			viewModel.cars(data.cars);
 
-		 	if (data.hasOwnProperty('errors')) {
-				alert(data.errors);
-			} else {
-				viewModel.cars(data.cars);
-
-
-				editing(false);
-			 	adding(false);
-			 	viewModel.editAddedMaintTasks([]);
-
-			}
+			editing(false);
+		 	adding(false);
+		 	viewModel.editAddedMaintTasks([]);
+		},
+		error: function(data) {
+			alert(data.responseJSON.errors);
 		}
 	});
-	
-
- 	
  }
 
 function getEngineTypes() {
