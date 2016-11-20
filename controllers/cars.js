@@ -1,6 +1,5 @@
 var Cars = require('../models/cars');
 var EngineTypes = require('../models/EngineTypesEnum');
-// require('../routes/cars');
 var MaintTasksController = require('./MaintTasks');
 var s = require("underscore.string");
 
@@ -9,12 +8,11 @@ exports.getCar = function(req, res) {
 };
 
 exports.getCars = function(req, res) {
-	// res.send('Getting all the cars');
 	Cars.find({}, function(err, cars) {
-		if (!err) {
-			res.send(cars);
+		if (err) {
+			res.status(502).send('error: no Cars collection');
 		} else {
-			console.log('error');
+			res.status(200).send(cars);
 		}
 	});
 };
@@ -25,7 +23,7 @@ exports.postCars = function(req, res) {
 		var newCar = new Cars(req.body.newCar);
 		newCar.save(function(err) {
 			if (err) {
-				console.log(err);
+				res.status(502).send('error: no Cars collection');
 			} else {
 				Cars.find({}, function(err, cars) {
 					res.status(201).send(JSON.stringify({ 'message': 'car added', 'cars': cars }));
@@ -33,9 +31,39 @@ exports.postCars = function(req, res) {
 			}
 		});
 	} else {
-		res.send(JSON.stringify({ 'message': 'Car not added', 'errors': status }));
+		res.status(400).send(JSON.stringify({ 'message': 'Car not added', 'errors': status }));
 	}
 };
+
+exports.deleteCar = function(req, res) {
+	var car = req.body;
+	Cars.find({ "_id":req.params.id }).remove(function(err) {
+		if (err) {
+			res.status(502).send('error: no Cars collection');
+		} else {
+			Cars.find({}, function(err, cars) {
+				res.status(202).send(JSON.stringify({ 'message': 'car deleted', 'cars': cars }));
+			});
+		}
+	});
+}
+
+exports.updateCar = function(req, res) {
+	var status = validateCar(req.body.updatedCar);
+	if (status.length === 0) {
+		Cars.findOneAndUpdate({ '_id': req.body.updatedCar._id }, req.body.updatedCar, function(err, doc) {
+			if (err) {
+				res.status(502).send('error: no Cars collection');
+			} else { 
+				Cars.find({}, function(err, cars) {
+					res.status(202).send(JSON.stringify({ 'message': 'car updated', 'cars': cars }));
+				});
+			}
+		});
+	} else {
+		res.status(400).send(JSON.stringify({ 'message': 'Car not updated', 'errors': status }));
+	}
+}
 
 function validateCar(car) {
 	var status = [];
@@ -146,28 +174,3 @@ function validateMaintTasks(status, car) {
 
 
 
-exports.deleteCar = function(req, res) {
-	var car = req.body;
-	Cars.find({ "_id":req.params.id }).remove(function(err) {
-		if (err) {
-			console.log('something happened here');
-		} else {
-			Cars.find({}, function(err, cars) {
-				res.send(JSON.stringify({ 'message': 'car deleted', 'cars': cars }));
-			});
-		}
-	});
-}
-
-exports.updateCar = function(req, res) {
-	var status = validateCar(req.body.updatedCar);
-	if (status.length === 0) {
-		Cars.findOneAndUpdate({ '_id': req.body.updatedCar._id }, req.body.updatedCar, function(err, doc) {
-			Cars.find({}, function(err, cars) {
-				res.status(201).send(JSON.stringify({ 'message': 'car updated', 'cars': cars }));
-			});
-		});
-	} else {
-		res.send(JSON.stringify({ 'message': 'Car not updated', 'errors': status }));
-	}
-}

@@ -32,12 +32,6 @@ app.use('/cars', cars);
 app.use('/engineTypes', engineTypes);
 app.use('/maintTasks', maintTasks);
 
-
-// var MaintType = require('./models/MaintTask');
-// var localMaint = new MaintType('local task', ['not', 'real']);
-// console.log(localMaint.name());
-// console.log(localMaint.invalidWith());
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
