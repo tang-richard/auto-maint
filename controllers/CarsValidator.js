@@ -1,5 +1,6 @@
 var EngineTypes = require('../models/EngineTypesEnum');
 var MaintTasksController = require('./MaintTasks');
+var s = require("underscore.string");
 
 function validateCar(car) {
 	var status = [];
@@ -108,4 +109,11 @@ function validateMaintTasks(status, car) {
 	}
 }
 
-module.exports = validateCar;
+module.exports = {
+	'validateCar': validateCar,
+	'validateCarProperties': validateCarProperties,
+	'validateMakeAndModels': validateMakeAndModels,
+	'validateYearAndOdometer': validateYearAndOdometer,
+	'validateEngineType': validateEngineType,
+	'validateMaintTasks': validateMaintTasks
+}

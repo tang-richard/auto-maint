@@ -1,5 +1,4 @@
 var Cars = require('../models/cars');
-var s = require("underscore.string");
 var CarsValidator = require('./CarsValidator');
 
 exports.getCar = function(req, res) {
@@ -17,9 +16,8 @@ exports.getCars = function(req, res) {
 };
 
 exports.postCars = function(req, res) {
-	var status = CarsValidator(req.body.newCar);
+	var status = CarsValidator.validateCar(req.body.newCar);
 
-	console.log(status);
 	if (status.length === 0) {
 		var newCar = new Cars(req.body.newCar);
 		newCar.save(function(err) {
@@ -50,7 +48,7 @@ exports.deleteCar = function(req, res) {
 }
 
 exports.updateCar = function(req, res) {
-	var status = CarsValidator(req.body.updatedCar);
+	var status = CarsValidator.validateCar(req.body.updatedCar);
 	if (status.length === 0) {
 		Cars.findOneAndUpdate({ '_id': req.body.updatedCar._id }, req.body.updatedCar, function(err, doc) {
 			if (err) {
