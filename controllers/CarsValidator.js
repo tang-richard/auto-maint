@@ -1,5 +1,6 @@
 var EngineTypes = require('../models/EngineTypesEnum');
 var MaintTasksController = require('./MaintTasks');
+var MaintTasks = require('../models/MaintTasks');
 var s = require("underscore.string");
 
 function validateCar(car) {
@@ -101,9 +102,18 @@ function validateMaintTasks(status, car) {
 		// iterate through the car's maintTypes and look at their invalidWith list
 		// if the list contains engine, then the task does not belong to the car, therefore quit
 		tasks.forEach(function(task) {
-			var invalidList = MaintTasksController.getTask(task).invalidWith;
-			if (invalidList.indexOf(engine) !== -1) {
-				status.push(task + ' maintenance task not valid for ' + engine + ' engine');
+
+			// check if the car's maintenance task is one of the existing types
+			// anything not part of the existing list is not allowed
+			if (MaintTasks.indexOf({ "name":task.toLowerCase() }) != -1) {
+				var invalidList = MaintTasksController.getTask(task).invalidWith;
+
+				// if it is, check if the car's engine is valid for the maint-task
+				if (invalidList.indexOf(engine) !== -1) {
+					status.push(task + ' maintenance task not valid for ' + engine + ' engine');
+				}
+			} else {
+				status.push(task + ' is not a valid maintenance task');
 			}
 		});
 	}
