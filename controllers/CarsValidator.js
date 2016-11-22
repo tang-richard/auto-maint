@@ -96,6 +96,7 @@ function validateEngineType(status, car) {
 
 function validateMaintTasks(status, car) {
 	if (car.hasOwnProperty('maintTasks') && car.hasOwnProperty('engineType')) {
+		removeDuplicateMaintTasks(car);
 		var tasks = car.maintTasks;
 		var engine = car.engineType.toLowerCase();
 
@@ -119,11 +120,20 @@ function validateMaintTasks(status, car) {
 	}
 }
 
+function removeDuplicateMaintTasks(car) {
+	var tasks = car.maintTasks;
+	tasks = tasks.filter(function(item, index, inputArray) {
+		return inputArray.indexOf(item) == index;
+	});
+	car.maintTasks = tasks;
+}
+
 module.exports = {
 	'validateCar': validateCar,
 	'validateCarProperties': validateCarProperties,
 	'validateMakeAndModels': validateMakeAndModels,
 	'validateYearAndOdometer': validateYearAndOdometer,
 	'validateEngineType': validateEngineType,
-	'validateMaintTasks': validateMaintTasks
+	'validateMaintTasks': validateMaintTasks,
+	'removeDuplicateMaintTasks': removeDuplicateMaintTasks
 }

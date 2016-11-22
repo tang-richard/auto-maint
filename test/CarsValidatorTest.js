@@ -270,7 +270,10 @@ describe('Validating maintenance tasks', function() {
 		assert.equal(status.length, 1);
 		assert.equal(status[0].includes('Invalid Maint Task'), true);
 	});
-	// it('', function() {});
-	// it('', function() {});
-	// it('', function() {});
+
+	it('Should remove duplicate maint tasks', function() {
+		var testCar = { "maintTasks":['ChangeEngineOil', 'ReplaceOilFilter', 'ChangeEngineOil', 'ChangeEngineOil'] };
+		CarsValidator.removeDuplicateMaintTasks(testCar);
+		assert.deepEqual(testCar.maintTasks, ['ChangeEngineOil', 'ReplaceOilFilter']);
+	});
 });
