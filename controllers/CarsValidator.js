@@ -96,7 +96,7 @@ function validateEngineType(status, car) {
 
 function validateMaintTasks(status, car) {
 	if (car.hasOwnProperty('maintTasks') && car.hasOwnProperty('engineType')) {
-		removeDuplicateMaintTasks(car);
+		MaintTasksController.removeDuplicateMaintTasks(car);
 		var tasks = car.maintTasks;
 		var engine = car.engineType.toLowerCase();
 
@@ -106,7 +106,8 @@ function validateMaintTasks(status, car) {
 
 			// check if the car's maintenance task is one of the existing types
 			// anything not part of the existing list is not allowed
-			if (MaintTasks.indexOf({ "name":task.toLowerCase() }) != -1) {
+			var mTask = MaintTasksController.getTask(task);
+			if (mTask.hasOwnProperty('name')) {
 				var invalidList = MaintTasksController.getTask(task).invalidWith;
 
 				// if it is, check if the car's engine is valid for the maint-task
@@ -120,20 +121,11 @@ function validateMaintTasks(status, car) {
 	}
 }
 
-function removeDuplicateMaintTasks(car) {
-	var tasks = car.maintTasks;
-	tasks = tasks.filter(function(item, index, inputArray) {
-		return inputArray.indexOf(item) == index;
-	});
-	car.maintTasks = tasks;
-}
-
 module.exports = {
 	'validateCar': validateCar,
 	'validateCarProperties': validateCarProperties,
 	'validateMakeAndModels': validateMakeAndModels,
 	'validateYearAndOdometer': validateYearAndOdometer,
 	'validateEngineType': validateEngineType,
-	'validateMaintTasks': validateMaintTasks,
-	'removeDuplicateMaintTasks': removeDuplicateMaintTasks
+	'validateMaintTasks': validateMaintTasks
 }

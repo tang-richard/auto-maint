@@ -15,3 +15,11 @@ exports.getTask = function(pTask) {
 		return result[0];
 	}
 }
+
+exports.removeDuplicateMaintTasks = function(car) {
+	var tasks = car.maintTasks;
+	tasks = tasks.filter(function(item, index, inputArray) {
+		return inputArray.indexOf(item) == index;
+	});
+	car.maintTasks = tasks;
+}
