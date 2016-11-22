@@ -216,3 +216,61 @@ describe('Validating engine type', function() {
 		});
 	});
 });
+
+describe('Validating maintenance tasks', function() {
+	it('Maint tasks invalid w/electric should set correct number of messages', function() {
+		var tasksInvalidForElectric = MaintTasks.filter(function(task) {
+			return task.invalidWith.includes('electric');
+		});
+
+		var testingCarTasks = [];
+		tasksInvalidForElectric.forEach(function(task) {
+			testingCarTasks.push(task.name);
+		});
+
+		var status = [];
+		var testCar = {"maintTasks":testingCarTasks, "engineType":"electric"};
+		CarsValidator.validateMaintTasks(status, testCar);
+		assert.equal(status.length, testingCarTasks.length);
+	});
+	it('Maint tasks invalid w/diesel should set correct number of messages', function() {
+		var tasksInvalidForDiesel = MaintTasks.filter(function(task) {
+			return task.invalidWith.includes('diesel');
+		});
+
+		var testingCarTasks = [];
+		tasksInvalidForDiesel.forEach(function(task) {
+			testingCarTasks.push(task.name);
+		});
+
+		var status = [];
+		var testCar = {"maintTasks":testingCarTasks, "engineType":"diesel"};
+		CarsValidator.validateMaintTasks(status, testCar);
+		assert.equal(status.length, testingCarTasks.length);
+	});
+	it('Maint tasks invalid w/hybrid should set correct number of messages', function() {
+		var tasksInvalidForHybrid = MaintTasks.filter(function(task) {
+			return task.invalidWith.includes('hybrid');
+		});
+
+		var testingCarTasks = [];
+		tasksInvalidForHybrid.forEach(function(task) {
+			testingCarTasks.push(task.name);
+		});
+
+		var status = [];
+		var testCar = {"maintTasks":testingCarTasks, "engineType":"hybrid"};
+		CarsValidator.validateMaintTasks(status, testCar);
+		assert.equal(status.length, testingCarTasks.length);
+	});
+	it('Invalid maintenance tasks should not be allowed', function() {
+		var status = [];
+		var testCar = {"maintTasks":['Invalid Maint Task'], "engineType":"hybrid"};
+		CarsValidator.validateMaintTasks(status, testCar);
+		assert.equal(status.length, 1);
+		assert.equal(status[0].includes('Invalid Maint Task'), true);
+	});
+	// it('', function() {});
+	// it('', function() {});
+	// it('', function() {});
+});

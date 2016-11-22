@@ -7,7 +7,7 @@ exports.getMaintTasks = function(req, res) {
 
 exports.getTask = function(pTask) {
 	var result = MaintTasks.filter(function(task) {
-		return task.name == pTask;
+		return task.name.toLowerCase() == pTask.toLowerCase();
 	});
 	if (result.length === 0) {
 		return {};
