@@ -7,5 +7,5 @@ exports.getEngineTypes = function(req, res) {
 	Object.keys(EngineTypesEnum).forEach(function(key, index) {
 		types.push(key);
 	});
-	res.send(types);
+	res.status(200).json(types);
 };
