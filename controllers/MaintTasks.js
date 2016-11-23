@@ -2,7 +2,7 @@
 
 var MaintTasks = require('../models/MaintTasks');
 exports.getMaintTasks = function(req, res) {
-	res.send(MaintTasks);
+	res.status(200).send(MaintTasks);
 };
 
 exports.getTask = function(pTask) {
