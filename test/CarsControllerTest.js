@@ -167,7 +167,9 @@ describe('Cars Controller', function() {
 			});
 	});
 	after(function(done) {
-		Cars.remove({});
+		Cars.remove({}, function() {
+			
+		});
 		done();
 	});
 
