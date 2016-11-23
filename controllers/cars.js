@@ -8,9 +8,9 @@ exports.getCar = function(req, res) {
 exports.getCars = function(req, res) {
 	Cars.find({}, function(err, cars) {
 		if (err) {
-			res.status(502).send('error: no Cars collection');
+			res.status(502).json('error: no Cars collection');
 		} else {
-			res.status(200).send(cars);
+			res.status(200).json(cars);
 		}
 	});
 };
@@ -22,15 +22,15 @@ exports.postCars = function(req, res) {
 		var newCar = new Cars(req.body.newCar);
 		newCar.save(function(err) {
 			if (err) {
-				res.status(502).send('error: no Cars collection');
+				res.status(502).json('error: no Cars collection');
 			} else {
 				Cars.find({}, function(err, cars) {
-					res.status(201).send(JSON.stringify({ 'message': 'car added', 'cars': cars }));
+					res.status(201).json({ 'message': 'car added', 'cars': cars });
 				});
 			}
 		});
 	} else {
-		res.status(400).send(JSON.stringify({ 'message': 'Car not added', 'errors': status }));
+		res.status(400).json({ 'message': 'Car not added', 'errors': status });
 	}
 };
 
@@ -38,10 +38,10 @@ exports.deleteCar = function(req, res) {
 	var car = req.body;
 	Cars.find({ "_id":req.params.id }).remove(function(err) {
 		if (err) {
-			res.status(502).send('error: no Cars collection');
+			res.status(502).json('error: no Cars collection');
 		} else {
 			Cars.find({}, function(err, cars) {
-				res.status(202).send(JSON.stringify({ 'message': 'car deleted', 'cars': cars }));
+				res.status(202).json({ 'message': 'car deleted', 'cars': cars });
 			});
 		}
 	});
@@ -52,14 +52,14 @@ exports.updateCar = function(req, res) {
 	if (status.length === 0) {
 		Cars.findOneAndUpdate({ '_id': req.body.updatedCar._id }, req.body.updatedCar, function(err, doc) {
 			if (err) {
-				res.status(502).send('error: no Cars collection');
+				res.status(502).json('error: no Cars collection');
 			} else { 
 				Cars.find({}, function(err, cars) {
-					res.status(202).send(JSON.stringify({ 'message': 'car updated', 'cars': cars }));
+					res.status(202).json({ 'message': 'car updated', 'cars': cars });
 				});
 			}
 		});
 	} else {
-		res.status(400).send(JSON.stringify({ 'message': 'Car not updated', 'errors': status }));
+		res.status(400).json({ 'message': 'Car not updated', 'errors': status });
 	}
 }

@@ -17,12 +17,15 @@ npm install
 Run the app:
 
 ```
-node ./bin/www
+npm start
 ```
 
-Alternatively, if nodemon is installed, run ```nodemon``` instead.
-
 Navigate to ```http://localhost:3000```
+
+To run tests: 
+```
+npm test
+```
 
 Data Model
 ----------

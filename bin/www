@@ -3,12 +3,10 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('auto-maint:server');
 var http = require('http');
 var mongoose = require('mongoose');
-
 
 /**
  * Get port from environment and store in Express.
@@ -21,7 +19,16 @@ app.set('port', port);
 /**
  *  Connect to MongoDB
  */
-mongoose.connect('mongodb://localhost/auto_maintenance');
+
+if (process.env.NODE_ENV == 'test') {
+  mongoose.connect('mongodb://localhost/auto_maintenance_test', function(err) {{
+    console.log('connected to test');
+  }});
+} else {
+  mongoose.connect('mongodb://localhost/auto_maintenance', function(err) {
+    console.log('connected to dev');
+  });
+}
 
 /**
  * Create HTTP server.
@@ -96,3 +103,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+module.exports = server;
